@@ -25,16 +25,37 @@ var reducer = (state = stateDefault, action) => {
   }
 return state;
 };
-var store = redux.createStore(reducer);
 
+// Instead of only calling the createStore function with reducer, we call it with an additional argument which allows us to debug the app
+// var store = redux.createStore(reducer){};
+var store = redux.createStore(reducer, redux.compose(
+  window.devToolsExtension ? window.devToolsExtension() : f => f
+));
+// console.log('Initial state of the store', store.getState() );
 
-console.log('Initial state of the store', store.getState() );
+// subscribe to changes
+var unsubscribe = store.subscribe( () => {
+  var state = store.getState();
+
+  document.getElementById('app').innerHTML = state.searchText;
+});
 
 
 store.dispatch({
   // only requirement is type, it resembles the action name
   type: 'CHANGE_SEARCH_TEXT',
-  searchText: 'Roy'
+  searchText: 'Clean Kitchen'
 });
 
-console.log('searchText should be "Roy"', store.getState() );
+store.dispatch({
+  type: 'CHANGE_SEARCH_TEXT',
+  searchText: 'Walk the dog'
+});
+
+unsubscribe();
+
+store.dispatch({
+  type: 'CHANGE_SEARCH_TEXT',
+  searchText: 'Roy Scheffers'
+});
+// console.log('searchText should be "Roy"', store.getState() );

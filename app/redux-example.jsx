@@ -7,7 +7,7 @@ var reducer = (state = {name: 'anonymous'}, action) => {
   // the above is ES6 syntax, below ES5.
   // If no state is provided, set an object, else state = state
   // state = state || {name: 'Anonymouse'};
-  console.log('New action', action);
+  // console.log('New action', action);
   switch (action.type) {
     case 'CHANGE_NAME':
       return {
@@ -21,16 +21,29 @@ var reducer = (state = {name: 'anonymous'}, action) => {
   return state;
 };
 
-var store = redux.createStore(reducer);
+var store = redux.createStore(reducer, redux.compose(
+  window.devToolsExtension ? window.devToolsExtension() : f => f
+));
 
-var currentState = store.getState();
-console.log('currentState ', currentState);
+// Subscribe to CHANGE_SEARCH_TEXT
+var unsubscribe = store.subscribe( () => {
+  var state = store.getState();
 
-var action = {
+  console.log('Name is ', state.name);
+  document.getElementById('app').innerHTML = state.name;
+});
+// unsubscribe();
+ // console.log('currentState ', store.getState() );
+
+store.dispatch({
   // only requirement is type, it resembles the action name
   type: 'CHANGE_NAME',
   name: 'Roy Scheffers'
-};
+});
 
-store.dispatch(action);
-console.log('Name should be Roy', store.getState() );
+
+
+store.dispatch({
+  type: 'CHANGE_NAME',
+  name: 'Zorana'
+});
