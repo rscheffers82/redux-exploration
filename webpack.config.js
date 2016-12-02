@@ -44,5 +44,5 @@ module.exports = {
       path.resolve(__dirname, './node_modules/foundation-sites/scss')
     ]
   },
-  devtool: 'cheap-module-eval-source-map'
+  devtool: 'inline-source-map'
 };
