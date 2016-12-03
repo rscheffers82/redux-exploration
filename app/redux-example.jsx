@@ -2,13 +2,9 @@ var redux = require('redux');
 
 console.log('Starting redux example');
 
-var defaultState = {
-  name: 'anonymous',
-  hobbies: [],
-  movies: []
-};
-var nextHobbyId = 1;
-var nextMovieId = 1;
+
+// Name reducer and action generators
+//-----------------------------------
 
 var nameReducer = (state = 'Anonymous', action) => {
   switch (action.type) {
@@ -19,6 +15,20 @@ var nameReducer = (state = 'Anonymous', action) => {
   };
 };
 
+var changeName = (name) => {
+  return {
+    type: 'CHANGE_NAME',
+    name
+    // In ES6 the below can be shortened by just typing the name of the var
+    // name: name
+  };
+};
+
+
+// Hobby reducer and action generators
+//------------------------------------
+
+var nextHobbyId = 1;
 var hobbiesReducer = (state = [], action) => {
   switch (action.type) {
     case 'ADD_HOBBY':
@@ -36,6 +46,25 @@ var hobbiesReducer = (state = [], action) => {
   }
 };
 
+var addHobby = (hobby) => {
+  return {
+    type: 'ADD_HOBBY',
+    hobby
+  };
+};
+
+var removeHobby = (id) => {
+  return {
+    type: 'REMOVE_HOBBY',
+    id
+  };
+};
+
+
+// Movie reducer and action generators
+//------------------------------------
+
+var nextMovieId = 1;
 var moviesReducer = (state = [], action) => {
   switch (action.type) {
     case 'ADD_MOVIE':
@@ -52,6 +81,21 @@ var moviesReducer = (state = [], action) => {
     default:
       return state;
   }
+};
+
+var addMovie = (title, genre) => {
+  return {
+    type: 'ADD_MOVIE',
+    title,
+    genre
+  };
+};
+
+var removeMovie = (id) => {
+  return {
+    type: 'REMOVE_MOVIE',
+    id
+  };
 };
 
 
@@ -75,52 +119,19 @@ var unsubscribe = store.subscribe( () => {
 // unsubscribe();
  // console.log('currentState ', store.getState() );
 
-// Make dispatches to the store
+// A set of dispatches to the store
 
-store.dispatch({
-  // only requirement is type, it resembles the action name
-  type: 'CHANGE_NAME',
-  name: 'Roy Scheffers'
-});
+store.dispatch( changeName('Roy Scheffers') );
 
+store.dispatch( addHobby('hiking') );
+store.dispatch( addHobby('walking') );
+store.dispatch( removeHobby(2) );
 
+store.dispatch( changeName('Zorana') );
 
-store.dispatch({
-  type: 'CHANGE_NAME',
-  name: 'Zorana'
-});
-
-store.dispatch({
-  type: 'ADD_HOBBY',
-  hobby: 'hiking'
-});
-
-store.dispatch({
-  type: 'ADD_HOBBY',
-  hobby: 'walking'
-});
-
-store.dispatch({
-  type: 'REMOVE_HOBBY',
-  id: 2
-});
-
-store.dispatch({
-  type: 'ADD_MOVIE',
-  title: 'Lock, stock, and two smoking barrels',
-  genre: 'action'
-});
-
-store.dispatch({
-  type: 'ADD_MOVIE',
-  title: 'Lion King',
-  genre: 'educational'
-});
-
-store.dispatch({
-  type: 'REMOVE_MOVIE',
-  id: 1
-});
+store.dispatch( addMovie('Lock, stock, and two smoking barrels','action') );
+store.dispatch( addMovie('Lion King', 'educational') );
+store.dispatch( removeMovie(1) );
 
 /*
 Write a dispatch first before writing the reducer. This way you already conceptualise what needs to happen
